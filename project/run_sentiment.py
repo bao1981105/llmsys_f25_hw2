@@ -120,6 +120,7 @@ class Network(minitorch.Module):
         batch = embeddings.shape[0]
         # 1. Average the embeddings on the sentence length dimension to obtain a tensor of (batch, embedding_dim)
         out = embeddings.mean(1)
+        out = out.view(batch, self.embedding_dim)
         # 2. Apply the first linear layer
         # self.l1.__call__(out) is equivalent to self.l1.forward(out)
         out = self.l1(out) # def __call__(self, *args: Any, **kwargs: Any) in class Module
