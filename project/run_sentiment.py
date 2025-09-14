@@ -26,8 +26,7 @@ def cross_entropy_loss(out, y):
     # 2. Compute log softmax of out and (ones - out)
     # 3. Calculate binary cross entropy and take mean
     # HINT: Use minitorch.tensor_functions.ones, minitorch.nn.logsoftmax
-    
-    raise NotImplementedError("cross_entropy_loss not implemented")
+
     
     # END ASSIGN1_3
 
@@ -56,14 +55,15 @@ class Linear(minitorch.Module):
         # 1. Reshape the input x to be of size (batch, in_size)
         x = x.view(batch, in_size)
         # 2. Reshape self.weights to be of size (in_size, self.out_size)
-        self.weights = self.weights.view(in_size, self.out_size)
+        weights = self.weights.value.view(in_size, self.out_size)
         # 3. Apply Matrix Multiplication on input x and self.weights, and reshape the output to be of size (batch, self.out_size)
         # use __matmul__ defined in tensor.py
-        output = x @ self.weights
+        output = x @ weights
         output = output.view(batch, self.out_size)
         # 4. Add self.bias
         # HINT: You can use the view function of minitorch.tensor for reshape
-        output = output + self.bias
+        bias = self.bias.value.view(batch, self.out_size)
+        output = output + bias
         return output
 
         # END ASSIGN1_2
