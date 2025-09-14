@@ -117,7 +117,7 @@ class Network(minitorch.Module):
     
         # BEGIN ASSIGN1_2
         # TODO
-        batch = embeddings.shape(0)
+        batch = embeddings.shape[0]
         # 1. Average the embeddings on the sentence length dimension to obtain a tensor of (batch, embedding_dim)
         out = embeddings.mean(1)
         # 2. Apply the first linear layer
