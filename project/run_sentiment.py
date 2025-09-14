@@ -12,6 +12,9 @@ from datasets import load_dataset
 from minitorch import SimpleOps
 BACKEND = minitorch.TensorBackend(SimpleOps)
 
+from minitorch import CudaKernelOps
+CUDABACKEND = minitorch.TensorBackend(CudaKernelOps)
+
 BATCH = 10
 
 
@@ -219,14 +222,18 @@ class SentenceSentimentTrain:
                 # BEGIN ASSIGN1_3
                 # TODO
                 # 1. Create x and y using minitorch.tensor function through the SimpleOps backend (cpu backend)
-                # 2. Set requires_grad=True for x and y
+                # 2. Set requires_grad=True for x and y. Why?
+                x = minitorch.tensor(X_train[example_num:example_num + batch_size], backend=BACKEND, requires_grad=True)
+                y = minitorch.tensor(y_train[example_num:example_num + batch_size], backend=BACKEND, requires_grad=True)
                 # 3. Get the model output (as out)
+                out = model(x)
                 # 4. Calculate the loss using Binary Crossentropy Loss
+                loss = cross_entropy_loss(out, y)
                 # 5. Call backward function of the loss
+                loss.backward()
                 # 6. Use Optimizer to take a gradient step
-                
-                raise NotImplementedError("SentenceSentimentTrain train not implemented")
-
+                optim.step()
+                optim.zero_grad()
                 # END ASSIGN1_3
                 
                 
@@ -244,21 +251,25 @@ class SentenceSentimentTrain:
                 # BEGIN ASSIGN1_3
                 # TODO
                 # 1. Create x and y using minitorch.tensor function through our CudaKernelOps backend
+                x = minitorch.tensor(X_val, backend=CUDABACKEND)
+                y = minitorch.tensor(y_val, backend=CUDABACKEND)
                 # 2. Get the output of the model
+                pred = model(x)
                 # 3. Obtain validation predictions using the get_predictions_array function, and add to the validation_predictions list
+                validation_predictions += get_predictions_array(y, pred)
                 # 4. Obtain the validation accuracy using the get_accuracy function, and add to the validation_accuracy list
+                val_acc = get_accuracy(validation_predictions)
+                validation_accuracy.append(val_acc)
+
+                # END ASSIGN1_3#
                 
-                raise NotImplementedError("SentenceSentimentTrain train not implemented")
-                
-                # END ASSIGN1_3
-                
-                model.train()
+                model.train() # Always switch back to `train()` before continuing training
 
             train_accuracy.append(get_accuracy(train_predictions))
             losses.append(total_loss/n_batches)
             log_fn(
                 epoch,
-                total_loss/n_batches,
+                losses[-1],
                 train_accuracy,
                 validation_predictions,
                 validation_accuracy,
