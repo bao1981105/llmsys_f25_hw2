@@ -70,7 +70,7 @@ class Linear(minitorch.Module):
         output = output.view(batch, self.out_size)
         # 4. Add self.bias
         # HINT: You can use the view function of minitorch.tensor for reshape
-        bias = self.bias.value.view(batch, self.out_size)
+        bias = self.bias.value.view(1, self.out_size)
         output = output + bias
         return output
 
