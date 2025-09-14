@@ -37,13 +37,14 @@ class Linear(minitorch.Module):
         
         # BEGIN ASSIGN1_2
         # TODO
-        # 1. Initialize self.weights to be a random parameter of (in_size, out_size).
-        # 2. Initialize self.bias to be a random parameter of (out_size)
-        # 3. Set self.out_size to be out_size
         # HINT: make sure to use the RParam function
-    
-        raise NotImplementedError("Linear not implemented")
-    
+        # 1. Initialize self.weights to be a random parameter of (in_size, out_size).
+        self.weights = RParam(in_size, out_size)
+        # 2. Initialize self.bias to be a random parameter of (out_size)
+        self.bias = RParam(out_size)
+        # 3. Set self.out_size to be out_size
+        self.out_size = out_size
+
         # END ASSIGN1_2
 
     def forward(self, x):
@@ -53,13 +54,18 @@ class Linear(minitorch.Module):
         # BEGIN ASSIGN1_2
         # TODO
         # 1. Reshape the input x to be of size (batch, in_size)
+        x = x.view(batch, in_size)
         # 2. Reshape self.weights to be of size (in_size, self.out_size)
+        self.weights = self.weights.view(in_size, self.out_size)
         # 3. Apply Matrix Multiplication on input x and self.weights, and reshape the output to be of size (batch, self.out_size)
+        # use __matmul__ defined in tensor.py
+        output = x @ self.weights
+        output = output.view(batch, self.out_size)
         # 4. Add self.bias
         # HINT: You can use the view function of minitorch.tensor for reshape
+        output = output + self.bias
+        return output
 
-        raise NotImplementedError("Linear forward not implemented")
-    
         # END ASSIGN1_2
         
         
@@ -90,9 +96,8 @@ class Network(minitorch.Module):
         # BEGIN ASSIGN1_2
         # TODO
         # 1. Construct two linear layers: the first one is embedding_dim * hidden_dim, the second one is hidden_dim * 1
-
-        raise NotImplementedError("Network not implemented")
-        
+        self.l1 = Linear(embedding_dim, hidden_dim)
+        self.l2 = Linear(hidden_dim, 1)
         # END ASSIGN1_2
         
         
@@ -104,17 +109,22 @@ class Network(minitorch.Module):
     
         # BEGIN ASSIGN1_2
         # TODO
+        batch = embeddings.shape(0)
         # 1. Average the embeddings on the sentence length dimension to obtain a tensor of (batch, embedding_dim)
+        out = embeddings.mean(1)
         # 2. Apply the first linear layer
+        # self.l1.__call__(out) is equivalent to self.l1.forward(out)
+        out = self.l1(out) # def __call__(self, *args: Any, **kwargs: Any) in class Module
         # 3. Apply ReLU and dropout (with dropout probability=self.dropout_prob)
+        out = out.relu()
+        out = dropout(out, rate=self.dropout_prob)
         # 4. Apply the second linear layer
+        out = self.l2(out)
         # 5. Apply sigmoid and reshape to (batch)
         # HINT: You can use minitorch.dropout for dropout, and minitorch.tensor.relu for ReLU
-        
-        raise NotImplementedError("Network forward not implemented")
-    
+        out = out.sigmoid()
+        out = out.view(batch)
         # END ASSIGN1_2
-
 
 # Evaluation helper methods
 def get_predictions_array(y_true, model_output):
