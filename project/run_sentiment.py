@@ -22,10 +22,18 @@ def RParam(*shape):
 def cross_entropy_loss(out, y):
     # BEGIN ASSIGN1_3
     # TODO
-    # 1. Create ones tensor with same shape as y
-    # 2. Compute log softmax of out and (ones - out)
-    # 3. Calculate binary cross entropy and take mean
+    # out: (batch,) - sigmoid output
     # HINT: Use minitorch.tensor_functions.ones, minitorch.nn.logsoftmax
+    # 1. Create ones tensor with same shape as y
+    ones = minitorch.tensor_functions.ones(y.shape)
+    # 2. Compute log softmax of out and (ones - out)
+    temp1 = minitorch.nn.logsoftmax(out, 0)
+    temp2 = minitorch.nn.logsoftmax(ones - out, 0)
+    # 3. Calculate binary cross entropy and take mean
+    bce = -(y @ temp1 + (1 - y) @ temp2)
+    bec = bce.mean()
+    return bce
+
 
     
     # END ASSIGN1_3
