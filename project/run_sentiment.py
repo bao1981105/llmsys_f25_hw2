@@ -133,6 +133,7 @@ class Network(minitorch.Module):
         # HINT: You can use minitorch.dropout for dropout, and minitorch.tensor.relu for ReLU
         out = out.sigmoid()
         out = out.view(batch)
+        return out
         # END ASSIGN1_2
 
 # Evaluation helper methods
