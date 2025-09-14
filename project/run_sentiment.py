@@ -126,7 +126,7 @@ class Network(minitorch.Module):
         out = self.l1(out) # def __call__(self, *args: Any, **kwargs: Any) in class Module
         # 3. Apply ReLU and dropout (with dropout probability=self.dropout_prob)
         out = out.relu()
-        out = dropout(out, rate=self.dropout_prob)
+        out = minitorch.nn.dropout(out, rate=self.dropout_prob)
         # 4. Apply the second linear layer
         out = self.l2(out)
         # 5. Apply sigmoid and reshape to (batch)
