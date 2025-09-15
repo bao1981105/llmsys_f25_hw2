@@ -37,7 +37,7 @@ def cross_entropy_loss(out, y):
     temp2 = minitorch.nn.logsoftmax(ones - out, 0)
     # 3. Calculate binary cross entropy and take mean
     bce = -(y * temp1 + (ones - y) * temp2)
-    bec = bce.mean()
+    bce = bce.mean()
     return bce
 
 
