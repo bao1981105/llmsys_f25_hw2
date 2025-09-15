@@ -28,13 +28,15 @@ def cross_entropy_loss(out, y):
     # TODO
     # out: (batch,) - sigmoid output
     # HINT: Use minitorch.tensor_functions.ones, minitorch.nn.logsoftmax
+    eps = 1e-8
+    out = out + eps # to avoid log(0)
     # 1. Create ones tensor with same shape as y
     ones = minitorch.tensor_functions.ones(y.shape)
     # 2. Compute log softmax of out and (ones - out)
     temp1 = minitorch.nn.logsoftmax(out, 0)
     temp2 = minitorch.nn.logsoftmax(ones - out, 0)
     # 3. Calculate binary cross entropy and take mean
-    bce = -(y @ temp1 + (1 - y) @ temp2)
+    bce = -(y * temp1 + (1 - y) * temp2)
     bec = bce.mean()
     return bce
 
