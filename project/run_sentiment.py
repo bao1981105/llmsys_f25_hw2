@@ -12,8 +12,6 @@ from datasets import load_dataset
 
 from minitorch import SimpleOps, CudaKernelOps
 BACKEND = minitorch.TensorBackend(SimpleOps)
-
-from minitorch import CudaKernelOps
 CUDABACKEND = minitorch.TensorBackend(CudaKernelOps)
 
 BATCH = 10
@@ -69,6 +67,8 @@ class Linear(minitorch.Module):
         # 1. Reshape the input x to be of size (batch, in_size)
         x = x.view(batch, in_size)
         # 2. Reshape self.weights to be of size (in_size, self.out_size)
+        # `.view(...)` in frameworks like Minitorch (and PyTorch) returns a new tensor object that shares the same underlying storage as `self.weights.value`, but with a different shape.
+        # This is a "view": it's a different "window" into the same data, not a copy.
         weights = self.weights.value.view(in_size, self.out_size)
         # 3. Apply Matrix Multiplication on input x and self.weights, and reshape the output to be of size (batch, self.out_size)
         # use __matmul__ defined in tensor.py
@@ -226,8 +226,8 @@ class SentenceSentimentTrain:
                 # TODO
                 # 1. Create x and y using minitorch.tensor function through the SimpleOps backend (cpu backend)
                 # 2. Set requires_grad=True for x and y. Why?
-                x = minitorch.tensor(X_train[example_num:example_num + batch_size], backend=BACKEND, requires_grad=True)
-                y = minitorch.tensor(y_train[example_num:example_num + batch_size], backend=BACKEND, requires_grad=True)
+                x = minitorch.tensor(X_train[example_num:example_num + batch_size], backend=CUDABACKEND, requires_grad=True)
+                y = minitorch.tensor(y_train[example_num:example_num + batch_size], backend=CUDABACKEND, requires_grad=True)
                 # 3. Get the model output (as out)
                 out = model(x)
                 # 4. Calculate the loss using Binary Crossentropy Loss
