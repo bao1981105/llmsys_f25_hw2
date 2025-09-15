@@ -2,8 +2,9 @@ import random
 import pdb
 
 import embeddings
-
+import os
 import sys
+sys.path.append(os.getcwd())
 sys.path.append('../')
 import minitorch
 
