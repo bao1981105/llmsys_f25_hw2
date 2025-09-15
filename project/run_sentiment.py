@@ -5,6 +5,12 @@ import embeddings
 
 import sys
 sys.path.append('../')
+# Print current working directory
+print("Current working directory:", os.getcwd())
+# Print sys.path before
+print("sys.path before importing minitorch:")
+for p in sys.path:
+    print(p)
 import minitorch
 
 from datasets import load_dataset
