@@ -5,13 +5,14 @@ import embeddings
 
 import sys
 import os
-sys.path.append('../')
+#sys.path.append('../')
 # Print current working directory
 print("Current working directory:", os.getcwd())
 # Print sys.path before
 print("sys.path before importing minitorch:")
 for p in sys.path:
     print(p)
+sys.path.append('/content/llmsys_f25_hw2')
 import minitorch
 
 from datasets import load_dataset
