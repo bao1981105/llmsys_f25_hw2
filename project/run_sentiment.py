@@ -31,10 +31,10 @@ def cross_entropy_loss(out, y):
     # 1. Create ones tensor with same shape as y
     ones = minitorch.tensor_functions.ones(y.shape)
     # 2. Compute log softmax of out and (ones - out)
-    #temp1 = minitorch.nn.logsoftmax(out, 0)
-    #temp2 = minitorch.nn.logsoftmax(ones - out, 0)
-    temp1 = out.log()
-    temp2 = (ones - out).log()
+    temp1 = minitorch.nn.logsoftmax(out, 0)
+    temp2 = minitorch.nn.logsoftmax(ones - out, 0)
+    #temp1 = out.log()
+    #temp2 = (ones - out).log()
     # 3. Calculate binary cross entropy and take mean
     bce = -(y * temp1 + (ones - y) * temp2)
     bce = bce.mean()
