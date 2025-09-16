@@ -31,8 +31,10 @@ def cross_entropy_loss(out, y):
     # 1. Create ones tensor with same shape as y
     ones = minitorch.tensor_functions.ones(y.shape)
     # 2. Compute log softmax of out and (ones - out)
-    temp1 = minitorch.nn.logsoftmax(out, 0)
-    temp2 = minitorch.nn.logsoftmax(ones - out, 0)
+    #temp1 = minitorch.nn.logsoftmax(out, 0)
+    #temp2 = minitorch.nn.logsoftmax(ones - out, 0)
+    temp1 = out.log()
+    temp2 = (ones - out).log()
     # 3. Calculate binary cross entropy and take mean
     bce = -(y * temp1 + (ones - y) * temp2)
     bce = bce.mean()
@@ -132,7 +134,7 @@ class Network(minitorch.Module):
         out = self.l1(out) # def __call__(self, *args: Any, **kwargs: Any) in class Module
         # 3. Apply ReLU and dropout (with dropout probability=self.dropout_prob)
         out = out.relu()
-        out = minitorch.nn.dropout(out, rate=self.dropout_prob)
+        out = minitorch.nn.dropout(out, rate=self.dropout_prob, ignore=not self.training)
         # 4. Apply the second linear layer
         out = self.l2(out)
         # 5. Apply sigmoid and reshape to (batch)
