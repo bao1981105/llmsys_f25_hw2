@@ -228,8 +228,8 @@ class SentenceSentimentTrain:
                 # TODO
                 # 1. Create x and y using minitorch.tensor function through the SimpleOps backend (cpu backend)
                 # 2. Set requires_grad=True for x and y. Why?
-                x = minitorch.tensor(X_train[example_num:example_num + batch_size], backend=CUDABACKEND, requires_grad=True)
-                y = minitorch.tensor(y_train[example_num:example_num + batch_size], backend=CUDABACKEND, requires_grad=True)
+                x = minitorch.tensor(X_train[example_num:example_num + batch_size], backend=BACKEND, requires_grad=True)
+                y = minitorch.tensor(y_train[example_num:example_num + batch_size], backend=BACKEND, requires_grad=True)
                 # 3. Get the model output (as out)
                 out = model(x)
                 # 4. Calculate the loss using Binary Crossentropy Loss
@@ -256,8 +256,8 @@ class SentenceSentimentTrain:
                 # BEGIN ASSIGN1_3
                 # TODO
                 # 1. Create x and y using minitorch.tensor function through our CudaKernelOps backend
-                x = minitorch.tensor(X_val, backend=CUDABACKEND)
-                y = minitorch.tensor(y_val, backend=CUDABACKEND)
+                x = minitorch.tensor(X_val, backend=BACKEND)
+                y = minitorch.tensor(y_val, backend=BACKEND)
                 # 2. Get the output of the model
                 pred = model(x)
                 # 3. Obtain validation predictions using the get_predictions_array function, and add to the validation_predictions list
